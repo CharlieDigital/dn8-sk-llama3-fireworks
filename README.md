@@ -20,6 +20,7 @@ First, get an API key from [Fireworks.ai](https://fireworks.ai) and add it to th
 
 ```shell
 cd api
+dotnet user-secrets init
 dotnet user-secrets set "RecipesConfig:FireworksKey" "YOUR_KEY_HERE"
 ```
 
