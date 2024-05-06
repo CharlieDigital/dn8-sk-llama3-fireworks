@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="container">
+        <div class="left">
+          <!-- The ingredient inputs (start here) -->
+          <div class="input">
+            <h2>Ingredients on Hand</h2>
+            <p>Provide a list of ingredients you have on hand (at least 12 characters).</p>
+            <div>
+              <textarea>beef flank, onions, peppers</textarea>
+              <label for="time">
+                Prep time
+              </label>
+              <select id="time">
+                <option value="15">15 minutes</option>
+                <option value="30">30 minutes</option>
+                <option value="45" selected>45 minutes</option>
+              </select>
+              <button id="generate">Generate</button>
+              <button id="reset">Reset</button>
+            </div>
+          </div>
+          <!-- Write a list of ingredients needed -->
+          <div class="additional">
+            <h2>Ingredients Needed</h2>
+            <div id="add">
+            </div>
+          </div>
+        </div>
+
+        <div class="middle">
+          <!-- Write short blurb about the recipe -->
+          <div class="intro">
+            <h2>Recipe Intro</h2>
+            <p id="int">
+
+            </p>
+          </div>
+          <!-- Write a short blurb on the ingredients on hand -->
+          <div class="ingredients">
+            <h2>Ingredients Intro</h2>
+            <div id="ing"></div>
+          </div>
+
+          <!-- Write a list of alternate recipes -->
+          <div class="alternates">
+            <h2>Alternate Recipes</h2>
+            <ul id="alt">
+
+            </ul>
+          </div>
+        </div>
+
+        <div class="right">
+          <div class="recipe">
+            <h2>Recipe Steps</h2>
+            <div id="ste"></div>
+          </div>
+
+          <div class="sides">
+            <h2>Side Dish Ideas</h2>
+            <div id="sde"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+
+  <style>
+
+  </style>
+</html>
