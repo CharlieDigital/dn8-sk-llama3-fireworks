@@ -9,7 +9,8 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 public class RecipeGenerator {
   private static readonly string _model = "accounts/fireworks/models/llama-v3-70b-instruct";
   private static readonly string _modelFast = "accounts/fireworks/models/llama-v3-8b-instruct";
-  private static readonly Uri _endpoint = new Uri("https://api.fireworks.ai/inference/v1/chat/completions");
+  private static readonly Uri _endpoint = new("https://api.fireworks.ai/inference/v1/chat/completions");
+
   private static readonly JsonSerializerOptions _options = new () {
     PropertyNameCaseInsensitive = true
   };
