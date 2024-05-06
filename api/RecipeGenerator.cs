@@ -63,19 +63,14 @@ public class RecipeGenerator {
 
     var completion = fragmentHandler();
 
-    var ingredients = "";
-
     // (2) Now generate the first parts in parallel for our random recipe.
     Task.WaitAll([
       handler(new ("alt", alternates)),
-      GenerateIngredientsAsync(recipe, ingredientsOnHand, i => ingredients = i, cancellation),
+      GenerateIngredientsAsync(recipe, ingredientsOnHand, request.PrepTime, cancellation),
       GenerateIntroAsync(recipe, cancellation),
       GenerateIngredientIntroAsync(ingredientsOnHand, cancellation),
       GenerateSidesAsync(recipe, cancellation)
     ]);
-
-    // We need the ingredients to generate the steps
-    await GenerateStepsAsync(recipe, ingredients, cancellation);
 
     _channel.Writer.Complete();
 
@@ -98,11 +93,11 @@ public class RecipeGenerator {
     var prompt = $$"""
                  You are a writer for America's Test Kitchen
                  You have been given a list of ingredients and prep time
-                 Your job is to think of 5 recipes that we can make with these ingredients within the prep time
+                 Your job is to think of 3 recipes that we can make with these ingredients within the prep time
+                 Here is a list of ingredients we have already: {{ingredientsOnHand}}
                  These are just the ingredients we already have on hand
                  You can include recipes that have more ingredients
-                 Here is a list of ingredients: {{ingredientsOnHand}}
-                 Our ideal prep time is: {{prepTime}} minutes or less
+                 The ideal prep time is {{prepTime}} minutes or less; pick recipes that can be prepared in this time limit
                  WRITE ONLY THE JSON DO NOT WRITE A PROLOGUE; JUST WRITE THE CONTENT
                  DO NOT WASTE TOKENS ON WHITESPACE WRITE THE JSON AS A SINGLE LINE
                  Write your output as JSON using the format:
@@ -139,7 +134,7 @@ public class RecipeGenerator {
   private async Task GenerateIngredientsAsync(
     RecipeSummary recipe,
     string ingredientsOnHand,
-    Action<string> resultHandler,
+    string prepTime,
     CancellationToken cancellation = default
   ) {
     var prompt = $"""
@@ -148,12 +143,13 @@ public class RecipeGenerator {
                  Here is the description: {recipe.Intro}
                  Here are the ingredients we already have: {ingredientsOnHand}
                  Write a list of the entire list of ingredients that we need
-                 The ingredients must include the ones we already have
                  Write each ingredient followed by a "⮑"
                  Example: 1/2 teaspoon salt⮑
                  Write the entire list as a single line
                  WRITE ONLY THE LIST OF INGREDIENTS DO NOT WRITE A PROLOGUE; JUST WRITE THE CONTENT
                  """;
+
+    var ingredients = "";
 
     await ExecutePromptAsync(
       "add",
@@ -163,9 +159,11 @@ public class RecipeGenerator {
         Temperature = 0.25,
         TopP = 0
       },
-      resultHandler,
+      i => ingredients = i,
       cancellation: cancellation
     );
+
+    await GenerateStepsAsync(recipe, ingredients, prepTime, cancellation);
   }
 
   /// <summary>
@@ -235,18 +233,23 @@ public class RecipeGenerator {
   private async Task GenerateStepsAsync(
     RecipeSummary recipe,
     string ingredients,
+    string time,
     CancellationToken cancellation = default
   ) {
     var prompt = $"""
                  You are a writer for America's Test Kitchen
                  You are writing out the steps for the recipe: {recipe.Name}
                  Here is the description of the recipe: {recipe.Intro}
-                 Here are some ingredients we already have: {ingredients}
-                 You can incorporate other ingredients as needed for this recipe
+                 Our target prep time is {time} minutes
                  Write each step starting with a number like "1."
                  End each step with "⮑⮑"
                  Write your entire output as a single line
                  WRITE ONLY THE RECIPE STEPS DO NOT WRITE A PROLOGUE; JUST WRITE THE CONTENT
+                 Here are the ingredients:
+
+                 <INGREDIENTS>
+                 {ingredients}
+                 <END INGREDIENTS>
                  """;
 
     await ExecutePromptAsync(

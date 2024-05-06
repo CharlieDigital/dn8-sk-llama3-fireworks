@@ -96,12 +96,14 @@ button:focus-visible {
 }
 
 /* Content */
+/*
 .middle>div>div,
 .middle>div>p,
 .middle>div>ul {
   max-height: 200px;
   overflow-y: scroll;
 }
+*/
 
 h2 {
   margin: 8px 0px;
@@ -131,4 +133,18 @@ h2 {
 
 #add, #ing, #ste {
   white-space: pre-line;
+}
+
+/* Ripple effect: https://codepen.io/finnhvman/pen/jLXKJw */
+.ripple {
+  background-position: center;
+  transition: background 0.5s;
+}
+.ripple:hover {
+  background: #1a1a1a radial-gradient(circle, transparent 1%, #646cff 1%) center/15000%;
+}
+.ripple:active {
+  background-color: #4e55e1;
+  background-size: 100%;
+  transition: background 0s;
 }
