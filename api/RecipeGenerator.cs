@@ -8,6 +8,7 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 public class RecipeGenerator {
   private static readonly string _model = "accounts/fireworks/models/llama-v3-70b-instruct";
+  private static readonly string _modelFast = "accounts/fireworks/models/llama-v3-8b-instruct";
   private static readonly Uri _endpoint = new Uri("https://api.fireworks.ai/inference/v1/chat/completions");
   private static readonly JsonSerializerOptions _options = new () {
     PropertyNameCaseInsensitive = true
@@ -121,6 +122,7 @@ public class RecipeGenerator {
         TopP = 0
       },
       (output) => json = output,
+      _modelFast,
       cancellation
     );
 
@@ -301,6 +303,7 @@ public class RecipeGenerator {
     string prompt,
     OpenAIPromptExecutionSettings settings,
     Action<string>? resultHandler = null,
+    string? modelOverride = null,
     CancellationToken cancellation = default
   ) {
     Console.WriteLine($"Running generation for part: {part}");
@@ -309,7 +312,7 @@ public class RecipeGenerator {
 
     var kernel = kernelBuilder
         .AddOpenAIChatCompletion(
-            modelId: _model,
+            modelId: modelOverride ?? _model, // Pick the override or the default
             apiKey: _key,
             endpoint: _endpoint
         )
