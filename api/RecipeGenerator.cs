@@ -41,9 +41,6 @@ public partial class RecipeGenerator {
     var (ingredientsOnHand, prepTime) = request;
 
     var recipes = await GenerateRecipesAsync(ingredientsOnHand, prepTime, cancellation);
-
-    Console.WriteLine($"Generated {recipes.Length} recipes.");
-
     var recipe = recipes[Random.Shared.Next(0, 4)];
 
     var alternates = recipes
@@ -93,7 +90,6 @@ public partial class RecipeGenerator {
     Console.WriteLine($"Running generation for part: {part}");
 
     var kernelBuilder = Kernel.CreateBuilder();
-
     var kernel = kernelBuilder
         .AddOpenAIChatCompletion(
             modelId: modelOverride ?? _model, // Pick the override or the default
@@ -103,9 +99,7 @@ public partial class RecipeGenerator {
         .Build();
 
     var chat = kernel.GetRequiredService<IChatCompletionService>();
-
     var history = new ChatHistory();
-
     var buffer = new StringBuilder();
 
     history.AddUserMessage(prompt);
@@ -124,7 +118,7 @@ public partial class RecipeGenerator {
 
     var output = buffer.ToString();
 
-    resultHandler?.Invoke(output);
+    resultHandler?.Invoke(output); // 👈 If the caller wants the full string, we hand it over here.
 
     Console.WriteLine("----");
     Console.WriteLine(output);
