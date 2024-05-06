@@ -4,7 +4,7 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
+  color-scheme: dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
@@ -66,7 +66,7 @@ button:focus-visible {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
-  gap: 4px 4px;
+  gap: 8px 8px;
   grid-template-areas:
     "left middle right"
     "left middle right"
@@ -88,10 +88,11 @@ button:focus-visible {
 }
 
 .container>div>div {
-  border: 1px solid #333;
+  border: 1px solid #3e3e3e;
+  background: #2d2d2d;
   border-radius: 4px;
   padding: 8px;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 }
 
 /* Content */
@@ -104,6 +105,7 @@ button:focus-visible {
 
 h2 {
   margin: 8px 0px;
+  color: #8481bf;
 }
 
 .input div {
