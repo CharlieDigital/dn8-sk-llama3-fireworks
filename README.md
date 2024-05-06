@@ -16,12 +16,13 @@ To see the full writeup, check out the article: [Need for Speed: LLMs Beyond Ope
 
 Follow these instructions to run the demo:
 
-First, get an API key from [Fireworks.ai](https://fireworks.ai) and add it to the user secrets.
+First, get an API key from [Fireworks.ai](https://fireworks.ai) and [Groq.com](https://groq.com) and add them to the user secrets.
 
 ```shell
 cd api
 dotnet user-secrets init
 dotnet user-secrets set "RecipesConfig:FireworksKey" "YOUR_KEY_HERE"
+dotnet user-secrets set "RecipesConfig:GroqKey" "YOUR_KEY_HERE"
 ```
 
 To run the front-end:
