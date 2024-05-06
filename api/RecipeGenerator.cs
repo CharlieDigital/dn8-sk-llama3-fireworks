@@ -1,32 +1,27 @@
 using System.Text;
 using System.Text.Json;
 using System.Threading.Channels;
-using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 public partial class RecipeGenerator {
-  private static readonly string _model = "accounts/fireworks/models/llama-v3-70b-instruct";
-  private static readonly string _modelFast = "accounts/fireworks/models/llama-v3-8b-instruct";
-  private static readonly Uri _endpoint = new("https://api.fireworks.ai/inference/v1/chat/completions");
-
   private static readonly JsonSerializerOptions _options = new () {
     PropertyNameCaseInsensitive = true
   };
 
   private readonly Channel<Fragment> _channel;
-  private readonly string _key;
+  private readonly Kernel _kernel;
 
   /// <summary>
   /// Injection constructor invoked by the DI container.
   /// </summary>
-  /// <param name="config">The injected configuration.</param>
+  /// <param name="kernel">The injected kernel singleton.</param>
   public RecipeGenerator(
-    IOptions<RecipesConfig> config
+    Kernel kernel
   ) {
-    _key = config.Value.FireworksKey;
     _channel = Channel.CreateUnbounded<Fragment>();
+    _kernel = kernel;
   }
 
   /// <summary>
@@ -89,23 +84,14 @@ public partial class RecipeGenerator {
   ) {
     Console.WriteLine($"Running generation for part: {part}");
 
-    var kernelBuilder = Kernel.CreateBuilder();
-    var kernel = kernelBuilder
-        .AddOpenAIChatCompletion(
-            modelId: modelOverride ?? _model, // Pick the override or the default
-            apiKey: _key,
-            endpoint: _endpoint
-        )
-        .Build();
-
-    var chat = kernel.GetRequiredService<IChatCompletionService>();
+    var chat = _kernel.GetRequiredService<IChatCompletionService>(modelOverride ?? "70b");
     var history = new ChatHistory();
     var buffer = new StringBuilder();
 
     history.AddUserMessage(prompt);
 
     await foreach (var message in chat.GetStreamingChatMessageContentsAsync(
-        history, settings, kernel, cancellation
+        history, settings, _kernel, cancellation
       )
     ) {
         await _channel.Writer.WriteAsync(

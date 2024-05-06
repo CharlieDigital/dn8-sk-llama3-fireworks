@@ -1,10 +1,35 @@
+using Microsoft.SemanticKernel;
+
 var builder = WebApplication.CreateBuilder(args);
+
+var endpoint = new Uri("https://api.fireworks.ai/inference/v1/chat/completions");
+var config = builder.Configuration
+  .GetSection(nameof(RecipesConfig))
+  .Get<RecipesConfig>();
+
+// Set up Semantic Kernel
+var kernelBuilder = Kernel.CreateBuilder();
+var kernel = kernelBuilder
+    .AddOpenAIChatCompletion(
+        modelId: "accounts/fireworks/models/llama-v3-70b-instruct",
+        apiKey: config!.FireworksKey,
+        endpoint: endpoint,
+        serviceId: "70b"
+    )
+    .AddOpenAIChatCompletion(
+        modelId: "accounts/fireworks/models/llama-v3-8b-instruct",
+        apiKey: config!.FireworksKey,
+        endpoint: endpoint,
+        serviceId: "8b"
+    )
+    .Build();
 
 builder.Services
   .Configure<RecipesConfig>(
     builder.Configuration.GetSection(nameof(RecipesConfig))
   )
   .AddCors()
+  .AddSingleton(kernel)
   .AddScoped<RecipeGenerator>();
 
 var app = builder.Build();

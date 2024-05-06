@@ -45,7 +45,7 @@ public partial class RecipeGenerator {
         TopP = 0
       },
       (output) => json = output,
-      _modelFast,
+      "8b",
       cancellation
     );
 
