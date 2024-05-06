@@ -2,7 +2,9 @@ using Microsoft.SemanticKernel;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var endpoint = new Uri("https://api.fireworks.ai/inference/v1/chat/completions");
+var fireworksEndpoint = new Uri("https://api.fireworks.ai/inference/v1/chat/completions");
+var groqEndpoint = new Uri("https://api.groq.com/openai/v1/chat/completions");
+
 var config = builder.Configuration
   .GetSection(nameof(RecipesConfig))
   .Get<RecipesConfig>();
@@ -10,19 +12,25 @@ var config = builder.Configuration
 // Set up Semantic Kernel
 var kernelBuilder = Kernel.CreateBuilder();
 var kernel = kernelBuilder
-    .AddOpenAIChatCompletion(
-        modelId: "accounts/fireworks/models/llama-v3-70b-instruct",
-        apiKey: config!.FireworksKey,
-        endpoint: endpoint,
-        serviceId: "70b"
-    )
-    .AddOpenAIChatCompletion(
-        modelId: "accounts/fireworks/models/llama-v3-8b-instruct",
-        apiKey: config!.FireworksKey,
-        endpoint: endpoint,
-        serviceId: "8b"
-    )
-    .Build();
+  .AddOpenAIChatCompletion(
+      modelId: "accounts/fireworks/models/llama-v3-70b-instruct",
+      apiKey: config!.FireworksKey,
+      endpoint: fireworksEndpoint,
+      serviceId: "70b"
+  )
+  .AddOpenAIChatCompletion(
+      modelId: "accounts/fireworks/models/llama-v3-8b-instruct",
+      apiKey: config!.FireworksKey,
+      endpoint: fireworksEndpoint,
+      serviceId: "8b"
+  )
+  .AddOpenAIChatCompletion(
+      modelId: "llama3-8b-8192",
+      apiKey: config!.GroqKey,
+      endpoint: groqEndpoint,
+      serviceId: "groq-8b"
+  )
+  .Build();
 
 builder.Services
   .Configure<RecipesConfig>(

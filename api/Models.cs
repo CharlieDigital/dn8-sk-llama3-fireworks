@@ -11,6 +11,7 @@ public record RecipeRequest(
 /// </summary>
 public record RecipesConfig {
   public required string FireworksKey { get; set; }
+  public required string GroqKey { get; set; }
 }
 
 /// <summary>
