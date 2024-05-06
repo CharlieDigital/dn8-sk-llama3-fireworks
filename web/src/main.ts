@@ -19,6 +19,18 @@ const $clicked = (selector: string, handler: (evt: Event) => void) =>
   ?.addEventListener("click", handler);
 
 /**
+ * Reset method to clear the generated text.
+ */
+const reset = () => {
+  $el("#add").innerHTML = "";
+  $el("#ing").innerHTML = "";
+  $el("#int").innerHTML = "";
+  $el("#alt").innerHTML = "";
+  $el("#ste").innerHTML = "";
+  $el("#sde").innerHTML = "";
+}
+
+/**
  * Handle events when the textarea value changes
  */
 $changed("textarea", (evt: Event) => {
@@ -36,8 +48,10 @@ $changed("textarea", (evt: Event) => {
  * Main action; click on the Generate button
  */
 $clicked("#generate", async () => {
-  const prepTime = $sel("#time").value
-  const ingredientsOnHand = $txt("textarea").value
+  reset();
+
+  const prepTime = $sel("#time").value;
+  const ingredientsOnHand = $txt("textarea").value;
 
   const controller = new AbortController();
 
@@ -77,11 +91,4 @@ $clicked("#generate", async () => {
   })
 });
 
-$clicked("#reset", () => {
-  $el("#add").innerHTML = "";
-  $el("#ing").innerHTML = "";
-  $el("#int").innerHTML = "";
-  $el("#alt").innerHTML = "";
-  $el("#ste").innerHTML = "";
-  $el("#sde").innerHTML = "";
-});
+$clicked("#reset", () => reset());
