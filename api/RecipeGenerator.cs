@@ -72,7 +72,7 @@ public partial class RecipeGenerator {
       GenerateIntroAsync(recipe, cancellation),
       GenerateIngredientIntroAsync(ingredientsOnHand, cancellation),
       GenerateSidesAsync(recipe, cancellation)
-    ]);
+    ], cancellation);
 
     _channel.Writer.Complete();
 
