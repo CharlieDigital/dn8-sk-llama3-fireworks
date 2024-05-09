@@ -84,7 +84,9 @@ public partial class RecipeGenerator {
   ) {
     Console.WriteLine($"Running generation for part: {part}");
 
-    var chat = _kernel.GetRequiredService<IChatCompletionService>(modelOverride ?? "70b");
+    var chat = _kernel.GetRequiredService<IChatCompletionService>(
+      modelOverride ?? "together-70b"
+    );
     var history = new ChatHistory();
     var buffer = new StringBuilder();
 

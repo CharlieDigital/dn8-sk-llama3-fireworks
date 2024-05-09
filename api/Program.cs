@@ -6,6 +6,8 @@ var fireworksEndpoint = new Uri("https://api.fireworks.ai/inference/v1/chat/comp
 var groqEndpoint = new Uri("https://api.groq.com/openai/v1/chat/completions");
 var togetherEndpoint = new Uri("https://api.together.xyz/v1/chat/completions");
 
+using var togetherHttpClient = new HttpClient(new TogetherHttpHandler());
+
 var config = builder.Configuration
   .GetSection(nameof(RecipesConfig))
   .Get<RecipesConfig>();
@@ -29,7 +31,8 @@ var kernel = kernelBuilder
     modelId: "meta-llama/Llama-3-70b-chat-hf",
     apiKey: config!.TogetherKey,
     endpoint: togetherEndpoint,
-    serviceId: "together-70b"
+    serviceId: "together-70b",
+    httpClient: togetherHttpClient
   )
   .AddOpenAIChatCompletion(
       modelId: "llama3-8b-8192",
