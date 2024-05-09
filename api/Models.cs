@@ -12,6 +12,7 @@ public record RecipeRequest(
 public record RecipesConfig {
   public required string FireworksKey { get; set; }
   public required string GroqKey { get; set; }
+  public required string TogetherKey { get; set; }
 }
 
 /// <summary>

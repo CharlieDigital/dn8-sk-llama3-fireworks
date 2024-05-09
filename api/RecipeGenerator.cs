@@ -36,7 +36,7 @@ public partial class RecipeGenerator {
     var (ingredientsOnHand, prepTime) = request;
 
     var recipes = await GenerateRecipesAsync(ingredientsOnHand, prepTime, cancellation);
-    var recipe = recipes[Random.Shared.Next(0, 4)];
+    var recipe = recipes[Random.Shared.Next(0, 2)];
 
     var alternates = recipes
       .Where(r => r.Name != recipe.Name)
@@ -84,7 +84,7 @@ public partial class RecipeGenerator {
   ) {
     Console.WriteLine($"Running generation for part: {part}");
 
-    var chat = _kernel.GetRequiredService<IChatCompletionService>(modelOverride ?? "70b");
+    var chat = _kernel.GetRequiredService<IChatCompletionService>(modelOverride ?? "together-70b");
     var history = new ChatHistory();
     var buffer = new StringBuilder();
 
