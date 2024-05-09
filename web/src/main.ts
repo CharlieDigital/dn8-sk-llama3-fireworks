@@ -86,7 +86,7 @@ $clicked("#generate", async () => {
     },
     onerror: (err) => {
       console.error(err);
-      controller.abort("Error");
+      throw err; // Rethrow to cancel retry
     }
   })
 });
