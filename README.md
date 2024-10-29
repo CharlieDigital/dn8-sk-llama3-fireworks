@@ -40,4 +40,4 @@ cd api
 dotnet run
 ```
 
-If you're working with Semantic Kernel, also check out my other repo: [SKPromptGenerator](https://github.com/CharlieDigital/SKPromptGenerator)
+:point_right: If you're working with Semantic Kernel, also check out my other repo: [SKPromptGenerator](https://github.com/CharlieDigital/SKPromptGenerator) ([and Nuget package](https://www.nuget.org/packages/SKPromptGenerator)) for streamlining execution of prompts using source generators.
