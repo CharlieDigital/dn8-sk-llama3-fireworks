@@ -39,3 +39,5 @@ In another terminal session:
 cd api
 dotnet run
 ```
+
+If you're working with Semantic Kernel, also check out my other repo: [SKPromptGenerator](https://github.com/CharlieDigital/SKPromptGenerator)
